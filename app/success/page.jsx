@@ -1,6 +1,7 @@
 "use client";
 
-import Success from "@/components/SuccessPage";
+import Success from "@/components/sucessPage";
+
 const SuccessPage = () => {
   return (
     <>
