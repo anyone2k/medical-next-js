@@ -44,7 +44,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <Video src={getStarted} />
+          <Video src={getStarted} style={{ width: "600px" }} />
         </motion.div>
       </main>
 
