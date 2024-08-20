@@ -2,49 +2,170 @@
 
 import { motion } from "framer-motion";
 import NavLink from "@/components/NavLink";
-
+import Video from "next-video";
+import getStarted from "/videos/vid.mp4";
+import Image from "next/image";
+import chatPic from "../images/chat.png";
+import treatmentPic from "../images/treatment.png";
+import globePic from "../images/globe.png";
 export default function Home() {
   return (
-    <div className="flex flex-col items-center ">
-      <div className="w-full h-[700px] flex justify-center items-center bg-[#28574E]">
-        <div className="flex flex-col -mt-[400px] gap-x-4">
-          <motion.div
-            className="p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center">
-              World's Best Advanced
-              <br />
-              Care Platform
-            </h1>
-          </motion.div>
-          <motion.div
-            className="p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="text-white text-18px sm:text-18px md:text-18px text-center">
-              Find The Best Hospitals and Doctors Across your area
-            </p>
-            <div className="p-4 flex justify-center">
-              <NavLink
-                href="/doctors"
-                className="flex items-center justify-center gap-x-1 text-sm  font-medium text-[#28574E] bg-[#FFFFFF] hover:bg-[#1E232F]  hover:text-white active:bg-[#1E232F] md:inline-flex"
-              >
-                Find Doctors
-              </NavLink>
-            </div>
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-[#28574E] to-[#1E232F] text-white">
+      <main className="flex-grow flex flex-col items-center justify-center text-center px-4">
+        <motion.div
+          className="p-4 mt-12"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+            World's Best Advanced
+            <br />
+            Care Platform
+          </h1>
+        </motion.div>
 
-          </motion.div>
+        <motion.div
+          className="p-4 mt-4"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <p className="text-lg sm:text-xl md:text-2xl mb-6">
+            Find The Best Hospitals and Doctors Across Your Area
+          </p>
+          <NavLink
+            href="/doctors"
+            className="px-6 py-3 text-sm md:text-base font-medium bg-white text-[#28574E] rounded-md shadow-md hover:bg-[#1E232F] hover:text-white transition-colors duration-300"
+          >
+            Find Doctors
+          </NavLink>
+        </motion.div>
+
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Video
+            src={getStarted}
+            style={{ width: "600px", marginBottom: "40px" }}
+          />
+        </motion.div>
+      </main>
+
+      {/* Updated Section */}
+      <section className="w-full py-12 bg-[#FFFFFF] text-[#28574E]">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-3xl font-bold mb-6">
+            Experience Exceptional Healthcare In Canada With Omnicure Canada
+          </h2>
+          <p className="text-lg sm:text-xl md:text-2xl mb-6">
+            Discover the pinnacle of healthcare services in Canada, where
+            advancements in artificial intelligence (AI), quality care,
+            cutting-edge research, expert doctors, and a commitment to patient
+            success combine to provide an unparalleled medical tourism
+            experience. Omnicure Canada utilizes AI to assist in diagnosing
+            patients with remarkable accuracy, ensuring timely and personalized
+            treatment plans. Connect with us today and embark on a journey of
+            exceptional Canadian healthcare services powered by innovation.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+            <div className="flex flex-col items-center p-6 bg-[#F8F9FA] rounded-lg shadow-md">
+              <Image
+                src={chatPic}
+                alt="Second Opinion"
+                className="w-12 h-12 mb-4"
+              />
+
+              <div className="text-xl font-semibold mb-2">Second Opinion</div>
+              <p className="text-sm">
+                When facing a serious, life-changing illness, we understand the
+                critical importance of obtaining expert advice, enhanced by
+                AI-driven diagnostics.
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-6 bg-[#F8F9FA] rounded-lg shadow-md">
+              <Image
+                src={treatmentPic}
+                alt="Second Opinion"
+                className="w-12 h-12 mb-4"
+              />
+              <div className="text-xl font-semibold mb-2">Treatment</div>
+              <p className="text-sm">
+                Get help from the best hospitals and specialists that excel in
+                providing premium healthcare directly from Canada, supported by
+                AI-powered insights.
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-6 bg-[#F8F9FA] rounded-lg shadow-md">
+              <Image
+                src={globePic}
+                alt="Second Opinion"
+                className="w-12 h-12 mb-4"
+              />
+              {/* Replace with your image path */}
+              <div className="text-xl font-semibold mb-2">Global Plans</div>
+              <p className="text-sm">
+                Access comprehensive global healthcare plans that ensure your
+                well-being no matter where you are, with the aid of advanced AI
+                technologies.
+              </p>
+            </div>
+          </div>
+
+          <NavLink
+            href="/doctors"
+            className="mt-8 px-6 py-3 text-sm md:text-base font-medium bg-[#28574E] text-white rounded-md shadow-md hover:bg-[#1E232F] transition-colors duration-300"
+          >
+            Get Started
+          </NavLink>
         </div>
-      </div>
-      <div className="w-full h-48 flex-grow bg-[#FFFFFF]"></div>
-      <div className="w-full h-48 bg-[#1E232F]"></div>
-      <div className="w-full h-48 bg-[#FFFFFF]"></div>
-      <div className="w-full h-48 bg-[#28574E]"></div>
+      </section>
+
+      <section className="w-full py-12 bg-[#FFFFFF] text-[#28574E]">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-6">Why Choose Us?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 bg-[#28574E] text-white rounded-full flex items-center justify-center">
+                🏥
+              </div>
+              <h3 className="text-xl font-semibold">Top Hospitals</h3>
+              <p className="mt-2">
+                Access the best medical facilities with state-of-the-art
+                technology and AI-driven diagnostic tools.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 bg-[#28574E] text-white rounded-full flex items-center justify-center">
+                👩‍⚕️
+              </div>
+              <h3 className="text-xl font-semibold">Expert Doctors</h3>
+              <p className="mt-2">
+                Connect with the most experienced and caring medical
+                professionals, supported by cutting-edge AI.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 bg-[#28574E] text-white rounded-full flex items-center justify-center">
+                💊
+              </div>
+              <h3 className="text-xl font-semibold">Comprehensive Care</h3>
+              <p className="mt-2">
+                Receive all-inclusive care tailored to your needs, enhanced by
+                AI-powered insights for better outcomes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="w-full py-8 bg-[#28574E] text-center text-sm">
+        <p>&copy; 2024 Care Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
