@@ -14,7 +14,7 @@ const AppointmentForm = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await axios.get('http://localhost:10999/api/v1/doctors');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_HMS_API}/doctors`);
         console.log('Response from API:', response.data);
         if (Array.isArray(response.data.data)) {
           setDoctors(response.data.data);

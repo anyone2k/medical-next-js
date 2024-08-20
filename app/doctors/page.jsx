@@ -20,7 +20,7 @@ const DoctorsPage = () => {
   // Function to fetch all doctors
   const fetchDoctors = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:10999/api/v1/doctors");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_HMS_API}/doctors`);
       setDoctors(response.data.data);
     } catch (error) {
       console.error("Error fetching doctors", error);
@@ -38,7 +38,7 @@ const DoctorsPage = () => {
   const fetchDoctorsByQuery = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:10999/api/v1/doctors/search/query?search=${query}`
+        `${process.env.NEXT_PUBLIC_HMS_API}/doctors/search/query?search=${query}`
       );
       setDoctors(response.data.data);
     } catch (error) {
