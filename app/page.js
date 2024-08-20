@@ -44,11 +44,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <img
-            src="./image.png"
-            alt="Healthcare Banner"
-            className="w-full max-w-3xl rounded-lg shadow-lg"
-          />
+          <Video src={getStarted} />
         </motion.div>
       </main>
 
