@@ -7,7 +7,7 @@ import axios from "axios";
 import ListItem from "@/components/ListItem";
 import SearchBar from "@/components/SearchBar";
 import { AnimatePresence, motion } from "framer-motion";
-
+import AppointmentForm from "@/components/Appointment"; 
 // Dynamically import Maps to enable Suspense
 const Maps = dynamic(() => import("@/components/Map"), { ssr: false });
 
@@ -16,6 +16,7 @@ const DoctorsPage = () => {
   const [query, setQuery] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false); // État pour afficher le formulaire
 
   // Function to fetch all doctors
   const fetchDoctors = useCallback(async () => {
@@ -61,7 +62,9 @@ const DoctorsPage = () => {
     setSelectedOption(option);
     setSelectedId(index);
   };
-
+  const handleAppointmentClick = () => {
+    setShowAppointmentForm(true); // Affiche le formulaire de rendez-vous
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 ">
       <div className="md:col-span-1 lg:col-span-1 bg-palette-white flex flex-col h-[89vh] ml-2 -mt-4">
@@ -129,6 +132,33 @@ const DoctorsPage = () => {
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
               >
                 Close
+              </motion.button>
+              <motion.button
+                onClick={handleAppointmentClick} // Affiche le formulaire de rendez-vous
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                Prendre rendez-vous
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+          {showAppointmentForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="p-6 inset-0 fixed flex items-center justify-center z-50 bg-black rounded-lg shadow-lg bg-opacity-30"
+          >
+            <div className="bg-white p-6 flex-col flex items-center justify-center rounded-lg shadow-lg w-full max-w-md">
+              <AppointmentForm 
+                selectedId={selectedId}
+                doctors={doctors}
+              /> {/* Formulaire importé depuis `app` */}
+              <motion.button
+                onClick={() => setShowAppointmentForm(false)} // Ferme le formulaire de rendez-vous
+                className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+              >
+                Fermer
               </motion.button>
             </div>
           </motion.div>

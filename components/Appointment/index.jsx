@@ -2,42 +2,28 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSession} from "next-auth/react";
 
-const AppointmentForm = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState('');
+const AppointmentForm = ({selectedId , doctors}) => {
   const [date, setDate] = useState('');
   const [reason, setReason] = useState('');
   const [duration, setDuration] = useState(30);
   const [message, setMessage] = useState('');
+  const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_HMS_API}/doctors`);
-        console.log('Response from API:', response.data);
-        if (Array.isArray(response.data.data)) {
-          setDoctors(response.data.data);
-        } else {
-          console.error('Data format is not an array');
-        }
-      } catch (error) {
-        console.error("Error fetching doctors", error);
-      }
-    };
 
-    fetchDoctors();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
 
     try {
       const response = await axios.post('http://localhost:10999/api/v1/appointment', {
-        patient: '66c2b08ff5456a18f366b02f',  // Assurez-vous que l'ID du patient est correct
-        dayTime: date,
-        duration,
-        reason,
+        "patientId": session.user._id,
+        "doctorId": doctors[selectedId]._id,
+        "dayTime": date,
+        "duration": duration,
+        "reason": reason
       });
 
       setMessage('Rendez-vous créé avec succès !');
@@ -47,6 +33,9 @@ const AppointmentForm = () => {
     }
   };
 
+  const minTime = "08:00";
+  const maxTime = "18:00";
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-center mb-6">Prendre un Rendez-vous</h2>
@@ -55,37 +44,24 @@ const AppointmentForm = () => {
           <label htmlFor="doctor" className="block text-sm font-medium text-gray-700">
             Docteur
           </label>
-          <select
-            id="doctor"
-            value={selectedDoctor}
-            onChange={(e) => setSelectedDoctor(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="">Sélectionnez un docteur</option>
-            {doctors.length > 0 ? (
-              doctors.map((doctor) => (
-                <option key={doctor._id} value={doctor._id}>
-                  {doctor.fullName.firstName} {doctor.fullName.lastName}
-                </option>
-              ))
-            ) : (
-              <option disabled>Aucun docteur disponible</option>
-            )}
-          </select>
+          <div>
+          Dr. {doctors[selectedId].fullName.firstName} {doctors[selectedId].fullName.lastName}
+          </div>
         </div>
 
         <div>
           <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-            Date et Heure
+            Date and Time
           </label>
           <input
-            type="datetime-local"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+           type="datetime-local"
+           id="date"
+           value={date}
+           onChange={(e) => setDate(e.target.value)}
+           required
+           min={`${date.slice(0, 10)}T${minTime}`}
+           max={`${date.slice(0, 10)}T${maxTime}`}
+           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
 
@@ -118,7 +94,7 @@ const AppointmentForm = () => {
         </div>
 
         <button
-          type="submit"
+
           className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Prendre Rendez-vous
