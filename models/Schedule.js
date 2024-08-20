@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const scheduleSchema = new Schema({
-  schedule: {
+  
     appointments: [
       {
         type: Schema.Types.ObjectId,
@@ -16,7 +16,7 @@ const scheduleSchema = new Schema({
     ref: "Doctor",
     required: true,
   },
-});
+);
 
 // add appointment method
 scheduleSchema.methods.addAppointment = function (appointment) {

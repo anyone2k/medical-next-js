@@ -2,130 +2,80 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 const AppointmentForm = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState('');
-  const [date, setDate] = useState('');
-  const [reason, setReason] = useState('');
-  const [duration, setDuration] = useState(30);
+  const { data: session } = useSession();
+  const [appointments, setAppointments] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_HMS_API}/doctors`);
-        console.log('Response from API:', response.data);
-        if (Array.isArray(response.data.data)) {
-          setDoctors(response.data.data);
-        } else {
-          console.error('Data format is not an array');
-        }
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_HMS_API}/patients/${session.user._id}/appointments`);
+        console.log(response)
+        setAppointments(response.data.data);
       } catch (error) {
-        console.error("Error fetching doctors", error);
+        console.error("Erreur lors de la récupération des rendez-vous", error);
       }
     };
-
-    fetchDoctors();
+    fetchAppointments();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post('http://localhost:10999/api/v1/appointment', {
-        patient: '66c2b08ff5456a18f366b02f',  // Assurez-vous que l'ID du patient est correct
-        dayTime: date,
-        duration,
-        reason,
-      });
-
-      setMessage('Rendez-vous créé avec succès !');
-    } catch (error) {
-      console.error("Erreur lors de la création du rendez-vous :", error);
-      setMessage(error.response?.data?.message || 'Une erreur s\'est produite.');
-    }
+  const handleAppointmentSelect = (appointment) => {
+    setSelectedAppointment(appointment);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Prendre un Rendez-vous</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="doctor" className="block text-sm font-medium text-gray-700">
-            Docteur
-          </label>
-          <select
-            id="doctor"
-            value={selectedDoctor}
-            onChange={(e) => setSelectedDoctor(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="">Sélectionnez un docteur</option>
-            {doctors.length > 0 ? (
-              doctors.map((doctor) => (
-                <option key={doctor._id} value={doctor._id}>
-                  {doctor.fullName.firstName} {doctor.fullName.lastName}
-                </option>
-              ))
-            ) : (
-              <option disabled>Aucun docteur disponible</option>
-            )}
-          </select>
-        </div>
+    <div className="flex gap-4">
+      {/* Liste des rendez-vous à gauche */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-1/4 bg-white rounded-md border-2 border-grey h-[89vh] overflow-y-auto"
+      >
+        <ul>
+          {appointments.map((appointment, index) => (
+            <li
+              key={index}
+              className={`p-4 cursor-pointer ${
+                selectedAppointment && selectedAppointment._id === appointment._id
+                  ? "bg-gray-300"
+                  : ""
+              }`}
+              onClick={() => handleAppointmentSelect(appointment)}
+            >
+              <p>Appointment #{index + 1}</p>
+              <p>Date: {new Date(appointment.dayTime).toLocaleString()}</p>
+              <p>Duration: {appointment.duration} minutes</p>
+              <p>Reason: {appointment.reason}</p>
+            </li>
+          ))}
+        </ul>
+      </motion.div>
 
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-            Date et Heure
-          </label>
-          <input
-            type="datetime-local"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="duration" className="block text-sm font-medium text-gray-700">
-            Durée (en minutes)
-          </label>
-          <input
-            type="number"
-            id="duration"
-            value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-            required
-            min={15}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
-            Raison
-          </label>
-          <textarea
-            id="reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          ></textarea>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          Prendre Rendez-vous
-        </button>
-
-        {message && <p className="text-red-600 mt-4">{message}</p>}
-      </form>
+      {/* Détails du rendez-vous sélectionné au centre */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-2/4 bg-white rounded-lg p-6 shadow-md"
+      >
+        {selectedAppointment ? (
+          <>
+            <h2 className="text-2xl font-bold text-center mb-6">Détails du Rendez-vous</h2>
+            <p><strong>Patient:</strong> {selectedAppointment.patient.fullName.firstName} {selectedAppointment.patient.fullName.lastName}</p>
+            <p><strong>Date et Heure:</strong> {new Date(selectedAppointment.dayTime).toLocaleString()}</p>
+            <p><strong>Durée:</strong> {selectedAppointment.duration} minutes</p>
+            <p><strong>Raison:</strong> {selectedAppointment.reason}</p>
+          </>
+        ) : (
+          <p>Aucun rendez-vous sélectionné.</p>
+        )}
+      </motion.div>
     </div>
   );
 };
