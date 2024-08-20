@@ -4,7 +4,7 @@ import React from "react";
 import { FaCheckCircle } from "react-icons/fa"; // Importing a check circle icon from react-icons
 import Image from "next/image";
 import Link from "next/link";
-import Button from "./ui/Button";
+import Button from "@/components/Button";
 import Calendar from "@/components/calendar.png"
 import logo from "@/app/icon.ico";
 import success from "@/components/image.png";

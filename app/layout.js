@@ -1,6 +1,6 @@
 import { Domine } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/NavBar";
 import AuthProvider from "@/components/AuthProvider";
 
 const domine = Domine({ subsets: ["latin"] });
