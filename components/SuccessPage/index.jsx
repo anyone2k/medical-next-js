@@ -4,7 +4,7 @@ import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../Button";
+import Button from "./ui/Button";
 import Calendar from "@/components/calendar.png"
 import logo from "@/app/icon.ico";
 import success from "@/components/image.png";
