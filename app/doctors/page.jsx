@@ -63,8 +63,8 @@ const DoctorsPage = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
-      <div className="md:col-span-1 lg:col-span-1 bg-palette-green flex flex-col h-[89vh] ml-2 -mt-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 ">
+      <div className="md:col-span-1 lg:col-span-1 bg-palette-white flex flex-col h-[89vh] ml-2 -mt-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
