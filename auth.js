@@ -37,9 +37,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async session({ session }) {
       // 1. Get user from database
       const user = await Patient.findOne({ email: session.user.email });
-      const { accessToken, refreshToken } = await user.generateTokens();
       // 2. Assign the user id to the session
-      session.user.accessToken = accessToken;
+      session.user._id = user._id;
       // 3. return session
       return session;
     },
