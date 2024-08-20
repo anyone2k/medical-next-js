@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './User.css';
@@ -5,16 +6,15 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, Link } from 'react-router-dom';
 
-function User() {
+function Edituser() {
     const navigate = useNavigate();
-    const loggedEmail = localStorage.getItem('userEmail') || ''; // Get the logged-in user's email from local storage
+    const loggedEmail = localStorage.getItem('userEmail') || '';
     const [formData, setFormData] = useState({
         name: '',
         email: loggedEmail,
-        phone: '',
-        dateNaissance: '',
-        currentPassword: '',
-        newPassword: ''
+        phone_number: '',
+        dateOfBirth: '',
+        emergency_contact: ''
     });
     const [montrerError, setMontrerError] = useState(false);
     const [montrerSuccess, setMontrerSuccess] = useState(false);
@@ -24,25 +24,22 @@ function User() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const res = await axios.get('http://localhost:3010/auth/user', {
+                const res = await axios.get('/api/me', {
                     params: { email: loggedEmail }
                 });
                 const userData = res.data;
 
-                // Extract date and format it to YYYY-MM-DD
-                const formattedDate = userData.dateNaissance ? new Date(userData.dateNaissance).toISOString().split('T')[0] : '';
+                const formattedDate = userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : '';
 
                 setFormData({
-                    name: userData.nom,
+                    name: userData.name,
                     email: userData.email,
-                    phone: userData.telephone,
-                    dateNaissance: formattedDate,
-                    currentPassword: '',
-                    newPassword: ''
+                    phone_number: userData.telephone,
+                    dateOfBirth: formattedDate,
+                    emergency_contact: userData.emergency_contact
                 });
             } catch (error) {
                 console.error('Error fetching user data:', error);
-                // Handle error fetching user data
             }
         };
 
@@ -61,7 +58,7 @@ function User() {
         const nameRegex = /^[a-zA-Z\s]+$/;
         const phoneRegex = /^[+\d\s-]+$/;
         const today = new Date();
-        const birthDate = new Date(formData.dateNaissance);
+        const birthDate = new Date(formData.dateOfBirth);
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDifference = today.getMonth() - birthDate.getMonth();
         if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
@@ -73,7 +70,7 @@ function User() {
             setMontrerErrorValidation(true);
             return false;
         }
-        if (!phoneRegex.test(formData.phone)) {
+        if (!phoneRegex.test(formData.phone_number)) {
             console.log("Invalid phone format");
             setMontrerErrorValidation(true);
             return false;
@@ -101,7 +98,6 @@ function User() {
             if (res.status === 200) {
                 setMontrerSuccess(true);
                 setMontrerError(false);
-                // Automatically hide success message after 5 seconds
                 setTimeout(() => setMontrerSuccess(false), 5000);
                 navigate('/');
 
@@ -115,7 +111,6 @@ function User() {
             setMontrerError(true);
             setMontrerSuccess(false);
             setErrorMessage(error.response?.data?.message || "Assurez-vous d'utiliser votre adresse email.");
-            // Automatically hide error message after 5 seconds
             setTimeout(() => setMontrerError(false), 5000);
         }
     };
@@ -168,62 +163,45 @@ function User() {
                     </Form.Group>
                     <br />
                     <Form.Group className="form-group">
-                        <Form.Label htmlFor="phone">Numéro de téléphone :</Form.Label>
+                        <Form.Label htmlFor="phone_number">Numéro de téléphone :</Form.Label>
                         <Form.Control
                             type="text"
-                            id="phone"
-                            placeholder={formData.phone || '+1 (123)-456-7890'}
-                            name="phone"
-                            value={formData.phone}
+                            id="phone_number"
+                            placeholder={formData.phone_number || '+1 (123)-456-7890'}
+                            name="phone_number"
+                            value={formData.phone_number}
                             onChange={handleChange}
                         />
                     </Form.Group>
                     <br />
                     <Form.Group className="form-group">
-                        <Form.Label htmlFor="dateNaissance">Date de naissance :</Form.Label>
+                        <Form.Label htmlFor="dateOfBirth">Date de naissance :</Form.Label>
                         <Form.Control
                             type="date"
-                            id="dateNaissance"
-                            name="dateNaissance"
-                            value={formData.dateNaissance}
+                            id="dateOfBirth"
+                            name="dateOfBirth"
+                            value={formData.dateOfBirth}
                             onChange={handleChange}
                         />
                     </Form.Group>
                     <br />
                     <Form.Group className="form-group">
-                        <Form.Label htmlFor="exampleInputPassword1">Ancien mot de passe :</Form.Label>
+                        <Form.Label htmlFor="emergency_contact">Numéro de téléphone :</Form.Label>
                         <Form.Control
-                            type="password"
-                            id="exampleInputPassword1"
-                            placeholder='********'
-                            name="currentPassword"
-                            value={formData.currentPassword}
+                            type="text"
+                            id="emergency_contact"
+                            placeholder={formData.emergency_contact || '+1 (123)-456-7890'}
+                            name="emergency_contact"
+                            value={formData.emergency_contact}
                             onChange={handleChange}
                         />
                     </Form.Group>
-                    <br />
-                    <Form.Group className="form-group">
-                        <Form.Label htmlFor="exampleInputPassword2">Nouveau mot de passe :</Form.Label>
-                        <Form.Control
-                            type="password"
-                            id="exampleInputPassword2"
-                            placeholder='********'
-                            name="newPassword"
-                            value={formData.newPassword}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
-                    <br />
-                    <br />
-                    <Button type="submit" className="btn btn-primary" id='signup'>Changer</Button>
-                    <br />
                 </Form>
+
             </div>
-            <br />
-            <br />
-            <br />
+
         </div>
     );
 }
 
-export default User;
+export default Edituser;
