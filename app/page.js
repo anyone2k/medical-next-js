@@ -37,6 +37,7 @@ export default function Home() {
                 Find Doctors
               </NavLink>
             </div>
+
           </motion.div>
         </div>
       </div>

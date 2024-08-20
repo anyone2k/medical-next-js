@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { FaCheckCircle } from "react-icons/fa"; // Importing a check circle icon from react-icons
+import { FaCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/components/Button";
+import Button from "../Button";
 import Calendar from "@/components/calendar.png"
 import logo from "@/app/icon.ico";
 import success from "@/components/image.png";
@@ -27,7 +27,7 @@ const Success = () => {
                     <Image src={success} height={300} width={280} alt="success" />
                     <h1 className="header mb-6 max-w-[690px] text-center text-palette-white">
                         Your{" "}
-                        <span style={{ color: '#4AC97E' }}>appointment request</span>{" "}
+                        <span className="text-palette-sucess">appointment request</span>{" "}
                         has been successfully submitted!
                     </h1>
                     <p className="text-palette-white">
@@ -63,7 +63,7 @@ const Success = () => {
                 </Button>
 
             </div>
-        </div>
+        </div >
     );
 };
 
